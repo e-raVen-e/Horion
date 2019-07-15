@@ -129,10 +129,18 @@ void Hooks::Init()
 	void* fullbright = reinterpret_cast<void*>(Utils::FindSignature("40 57 48 83 EC 40 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 89 74 24 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 33 C0 48 89 44 24 ?? 48 89 44 24 ?? 48 8B 01 48 8D 54 24 ??"));
 	g_Hooks.fullBrightIdk__Hook = std::make_unique<FuncHook>(fullbright, Hooks::fullBrightIdk);
 	g_Hooks.fullBrightIdk__Hook->init();
+
+
+#ifdef _DEBUG
+	void* boi = reinterpret_cast<void*>(g_Data.getModule()->ptrBase + 0x1231870);
+	g_Hooks.godgamerTestHook = std::make_unique<FuncHook>(boi, Hooks::GodGamerTest);
+	g_Hooks.godgamerTestHook->init();
+#endif
 }
 
 void Hooks::Restore()
 {
+
 	g_Hooks.gameMode_tickHook->Restore();
 	g_Hooks.chatScreen_sendMessageHook->Restore();
 	g_Hooks.d3d11_presentHook->Restore();
@@ -155,6 +163,10 @@ void Hooks::Restore()
 	g_Hooks.MoveInputHandler_tickHook->Restore();
 	g_Hooks.chestScreenController__tickHook->Restore();
 	g_Hooks.fullBrightIdk__Hook->Restore();
+
+#ifdef _DEBUG
+	g_Hooks.godgamerTestHook->Restore();
+#endif
 }
 
 __int64 __fastcall Hooks::fullBrightIdk(__int64 a1)
@@ -179,6 +191,14 @@ __int64 __fastcall Hooks::fullBrightIdk(__int64 a1)
 	}
 
 	return oFunc(a1);
+}
+
+__int64 __fastcall Hooks::GodGamerTest(__int64 a1, __int64 a2, __int64 a3)
+{
+	static auto oFunc = g_Hooks.godgamerTestHook->GetOriginal<GodGamerTestHook_t>();
+	TextHolder* text = reinterpret_cast<TextHolder*>(a2);
+	text->setText("§r§k§§retard");
+	return oFunc(a1, a2, a3);
 }
 
 __int64 __fastcall Hooks::chestScreenController__tick(C_ChestScreenController* a1)

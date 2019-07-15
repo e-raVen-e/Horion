@@ -66,6 +66,7 @@ private:
 	static __int64 __fastcall MoveInputHandler_tick(C_MoveInputHandler* a1,C_Entity* a2);
 	static __int64 __fastcall chestScreenController__tick(C_ChestScreenController* a1);
 	static __int64 __fastcall fullBrightIdk(__int64 a1);
+	static __int64 __fastcall GodGamerTest(__int64 a1, __int64 a2, __int64 a3);
 	 
 	std::unique_ptr<FuncHook> gameMode_tickHook;
 	std::unique_ptr<FuncHook> survivalMode_tickHook;
@@ -95,9 +96,9 @@ private:
 	std::unique_ptr<FuncHook> MoveInputHandler_tickHook;
 	std::unique_ptr<FuncHook> chestScreenController__tickHook;
 	std::unique_ptr<FuncHook> fullBrightIdk__Hook;
+	std::unique_ptr<FuncHook> godgamerTestHook;
 
-
-
+	typedef __int64(__fastcall* GodGamerTestHook_t)(__int64 a1, __int64 a2, __int64 a3);
 	typedef __int64(__fastcall* LevelRenderer_renderLevel_t)(__int64 a1, __int64 a2, __int64 a3);
 	typedef bool(__fastcall* mob_isAlive_T)(C_Entity* a1);
 	typedef float(__fastcall* getFov_t)(__int64 a1, float a2, bool a3);
