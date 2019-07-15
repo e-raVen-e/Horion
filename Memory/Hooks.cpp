@@ -167,6 +167,23 @@ void Hooks::Restore()
 #ifdef _DEBUG
 	g_Hooks.godgamerTestHook->Restore();
 #endif
+	g_Hooks.Actor__isInWaterHook->Restore();
+}
+
+bool __fastcall Hooks::Actor__isInWater(C_Entity* a1)
+{
+	static auto oFunc = g_Hooks.Actor__isInWaterHook->GetOriginal<Actor__isInWater_t>();
+
+	if (g_Data.getLocalPlayer() != a1)
+		return oFunc(a1);
+
+	static AirSwim* AirSwimModule = reinterpret_cast<AirSwim*>(moduleMgr->getModule<AirSwim>());
+	if (AirSwimModule == nullptr)
+		AirSwimModule = reinterpret_cast<AirSwim*>(moduleMgr->getModule<AirSwim>());
+	else if (AirSwimModule->isEnabled())
+		return true;
+
+	return oFunc(a1);
 }
 
 __int64 __fastcall Hooks::fullBrightIdk(__int64 a1)
@@ -390,20 +407,6 @@ void __fastcall Hooks::ChestBlockActor_tick(C_ChestBlockActor* _this, void* a)
 	GameData::addChestToList(_this);
 }
 
-void Hooks::LocalPlayer_CheckFallDamage(C_LocalPlayer* a, float* a2, void* a3)
-{
-	static auto oFunc = g_Hooks.LocalPlayer_CheckFallDamageHook->GetOriginal<LocalPlayer_CheckFallDamage_t>();
-
-
-	static IModule* mod = moduleMgr->getModule<NoFall>();
-	if (mod == nullptr)
-		mod = moduleMgr->getModule<NoFall>();
-	else if (mod->isEnabled()) {
-		return;
-	}
-
-	oFunc(a, a2, a3);
-}
 
 void Hooks::Actor_lerpMotion(C_Entity * _this, vec3_t motVec)
 {
